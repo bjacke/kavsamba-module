@@ -1,0 +1,40 @@
+# $Id: Makefile.in,v 1.3 2003/09/29 08:20:46 isv Exp $
+CC = @CC@
+DEFS = @DEFS@ 
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+CXXFLAGS = @CXXFLAGS@
+top_srcdir=@top_srcdir@
+LIBS = @LIBS@
+SUBDIRS=src
+
+all: 
+	@for subdir in $(SUBDIRS); do  \
+	echo Making link in $$subdir;  \
+	(cd $$subdir && $(MAKE) $@) || exit 1; \
+	done
+
+clean:
+	@for subdir in $(SUBDIRS); do  \
+	echo Cleaning $$subdir;  \
+	(cd $$subdir && $(MAKE) $@) || exit 1; \
+	rm -f *~; \
+	done
+	
+distclean:
+	@for subdir in $(SUBDIRS); do  \
+	(cd $$subdir && $(MAKE) $@); \
+	done
+	-rm -f config.cache config.log Makefile
+
+
+.cpp.o:
+	@echo "Compiling  $<"
+	$(CXXCOMPILE) -c $<
+
+.c.o:
+	@echo "Compiling $<"
+	$(COMPILE) -c $<
+
+
+

@@ -1,0 +1,135 @@
+CC = @CC@
+top_srcdir=@top_srcdir@
+
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+LDFLAGS=@LDFLAGS@
+CFLAGS = @CFLAGS@
+DEFS = @DEFS@
+AR=ar cr
+RANLIB=ranlib
+DYNFLAGS=@DYNFLAGS@
+
+INCLUDES=@INCLUDES@
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+KAVSAMBA_3_0_0_MODULE_NAME=@KAVSAMBA_3_0_0_MODULE_NAME@
+KAVSAMBA_3_0_2_MODULE_NAME=@KAVSAMBA_3_0_2_MODULE_NAME@
+KAVSAMBA_3_0_4_MODULE_NAME=@KAVSAMBA_3_0_4_MODULE_NAME@
+KAVSAMBA_3_0_11_MODULE_NAME=@KAVSAMBA_3_0_11_MODULE_NAME@
+KAVSAMBA_3_0_20_MODULE_NAME=@KAVSAMBA_3_0_20_MODULE_NAME@
+KAVSAMBA_3_0_20a_MODULE_NAME=@KAVSAMBA_3_0_20a_MODULE_NAME@
+
+
+
+mkinstalldirs = $(SHELL) ./config/mkinstalldirs
+
+LIB_DIR=$(top_srcdir)/lib
+BIN_DIR=$(top_srcdir)/bin
+
+COMPILE  = @$(CC) $(DEFS) $(INCLUDES) $(CFLAGS) -o $@
+LINK=@$(CC) $(LDFLAGS)
+SHARED_LINK =$(LINK) $(DYNFLAGS) -o $@
+
+KAVSAMBA_OBJS_2X=kavsamba_helpers.o kavsamba_common.o kavsamba_wrap-2.2.x.o
+KAVSAMBA_OBJS_3X=kavsamba_helpers.o kavsamba_common.o kavsamba_wrap-3.x.o
+SAMBA_INCLUDES=@top_srcdir@/samba_includes/includes
+2XTARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_2X@
+3_0_0_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_0@
+3_0_2_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_2@
+3_0_4_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_4@
+3_0_11_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_11@
+3_0_20_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_20@
+3_0_20a_TARGET=$(top_srcdir)/../lib/@KAVSAMBA_LIB_NAME_3_0_20a@
+
+
+all: 2x 3_0_0 3_0_2 3_0_4 3_0_11 3_0_20 3_0_20a
+
+2x:
+	@mkdir -p $(top_srcdir)/../lib
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/2.2.x $(SAMBA_INCLUDES)
+	@$(MAKE) $(2XTARGET)
+
+3_0_0:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.0 $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_0_MODULE_NAME)\\\"" $(3_0_0_TARGET)
+
+3_0_2:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.2 $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_2_MODULE_NAME)\\\"" $(3_0_2_TARGET)
+
+3_0_4:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.4 $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_4_MODULE_NAME)\\\"" $(3_0_4_TARGET)
+
+3_0_11:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.11 $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_11_MODULE_NAME)\\\"" $(3_0_11_TARGET)
+
+3_0_20:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.20 $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_20_MODULE_NAME)\\\"" $(3_0_20_TARGET)
+
+3_0_20a:
+	@$(MAKE) clean
+	@rm -f $(SAMBA_INCLUDES)
+	@ln -s @top_srcdir@/samba_includes/3.0.20a $(SAMBA_INCLUDES)
+	@$(MAKE) CFLAGS="$(CFLAGS) -DKAVSAMBA_3X_MODULE_NAME=\\\"$(KAVSAMBA_3_0_20a_MODULE_NAME)\\\"" $(3_0_20a_TARGET)
+
+
+
+kavsamba_helpers.c:
+	@cp $(top_srcdir)/../src/kavsamba_helpers.c kavsamba_helpers.c
+	@cp $(top_srcdir)/../include/kavsamba_helpers.h $(top_srcdir)/include/kavsamba_helpers.h
+
+$(2XTARGET): $(KAVSAMBA_OBJS_2X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_2X) $(LIBS) 
+
+$(3_0_0_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS) 
+
+
+$(3_0_2_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS) 
+
+$(3_0_4_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS)
+
+$(3_0_11_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS)
+
+$(3_0_20_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS) 
+
+$(3_0_20a_TARGET): $(KAVSAMBA_OBJS_3X) $(LIBS)
+	$(SHARED_LINK) $(KAVSAMBA_OBJS_3X) $(LIBS) 
+ 
+clean:
+	@rm -f $(KAVSAMBA_OBJS_2X) $(KAVSAMBA_OBJS_3X) *.d
+ 
+
+distclean: clean
+	@rm -f Makefile
+
+.c.o:
+	@echo "Compiling $<"
+	$(COMPILE) -MD -c $<
+
+
+include $(wildcard *.d)
+
+
